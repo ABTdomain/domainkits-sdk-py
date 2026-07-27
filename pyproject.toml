@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "domainkits"
+version = "0.1.0"
+description = "Python client for the DomainKits REST API. Search expiring, newly registered, aged, active, deleted and marketplace domains, plus WHOIS, DNS, Certificate Transparency and trends."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    {name = "DomainKits", email = "info@domainkits.com"}
+]
+keywords = ["domain", "domain-search", "expired-domains", "newly-registered-domains", "whois", "dns", "certificate-transparency", "domainkits"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.urls]
+Homepage = "https://domainkits.com/dev"
+Documentation = "https://domainkits.com/dev/api-docs"
+Repository = "https://github.com/ABTdomain/domainkits-sdk-py"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["domainkits*"]
