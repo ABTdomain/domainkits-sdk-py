@@ -10,7 +10,7 @@ from .client import (
     RateLimitError,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.3.8"
 __all__ = [
     "DomainKits",
     "DomainKitsError",
@@ -39,7 +39,7 @@ class SearchResource:
             data = result["data"]
             yield from data
             offset += len(data)
-            if not data or len(data) < limit or offset >= result["total"]:
+            if not data or offset >= result["total"]:
                 return
 
     def export(self, **params: Any) -> str:
@@ -59,6 +59,7 @@ class DomainKits:
 
         self.expired = SearchResource(self._client, "/search/expired")
         self.nrds = SearchResource(self._client, "/search/nrds")
+        self.nrds_live = SearchResource(self._client, "/search/nrds-live")
         self.aged = SearchResource(self._client, "/search/aged")
         self.active = SearchResource(self._client, "/search/active")
         self.deleted = SearchResource(self._client, "/search/deleted")
@@ -79,17 +80,25 @@ class DomainKits:
     def dns(self, domain: str) -> dict[str, Any]:
         return self._client.request("/dns", {"domain": domain})
 
+    def bulk_dns(self, domains: list[str]) -> dict[str, Any]:
+        return self._client.request_bulk("/bulk/dns", {"domains": domains})
+
+    def bulk_whois(self, domains: list[str]) -> dict[str, Any]:
+        return self._client.request_bulk("/bulk/whois", {"domains": domains})
+
     def safety(self, domain: str) -> dict[str, Any]:
         return self._client.request("/safety", {"domain": domain})
 
-    def ip_lookup(self, query: str) -> dict[str, Any]:
-        return self._client.request("/ip-lookup", {"query": query})
+    def ip_lookup(self, query: str) -> dict[str, Any] | None:
+        result = self._client.request_list("/ip-lookup", {"query": query})
+        data = result["data"]
+        return data[0] if data else None
 
-    def registrar(self, query: str) -> dict[str, Any]:
-        return self._client.request("/registrar", {"query": query})
+    def registrar(self, query: str, **params: Any) -> dict[str, Any]:
+        return self._client.request_list("/registrar", {"query": query, **params})
 
     def status_guide(self, query: str | None = None) -> dict[str, Any]:
-        return self._client.request("/status-guide", {"query": query})
+        return self._client.request_list("/status-guide", {"query": query})
 
     def tld_check(self, prefix: str, **params: Any) -> dict[str, Any]:
         return self._client.request_envelope("/tld-check", {"prefix": prefix, **params})

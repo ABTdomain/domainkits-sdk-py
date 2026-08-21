@@ -95,7 +95,12 @@ class DomainKitsClient:
         self.timeout = timeout
         self.max_retries = max_retries
 
-    def request_raw(self, path: str, params: dict[str, Any] | None = None) -> tuple[int, Any, bytes]:
+    def request_raw(
+        self,
+        path: str,
+        params: dict[str, Any] | None = None,
+        payload: Any = None,
+    ) -> tuple[int, Any, bytes]:
         query: dict[str, str] = {}
         for key, value in (params or {}).items():
             if value is None or value == "":
@@ -112,13 +117,17 @@ class DomainKitsClient:
 
         last_error: DomainKitsError | None = None
         for attempt in range(self.max_retries + 1):
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Accept": "application/json",
+                "User-Agent": "domainkits-python/0.3.8",
+            }
+            if payload is not None:
+                headers["Content-Type"] = "application/json"
             request = urllib.request.Request(
                 url,
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Accept": "application/json",
-                    "User-Agent": "domainkits-python/0.1.0",
-                },
+                data=None if payload is None else json.dumps(payload).encode("utf-8"),
+                headers=headers,
             )
             try:
                 response = urllib.request.urlopen(request, timeout=self.timeout)
@@ -179,3 +188,23 @@ class DomainKitsClient:
     def request_envelope(self, path: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
         envelope, _, _ = self._parse(path, params)
         return envelope
+
+    def request_bulk(self, path: str, payload: Any) -> dict[str, Any]:
+        status, headers, body = self.request_raw(path, None, payload)
+        envelope = json.loads(body)
+        if isinstance(envelope, dict) and envelope.get("success") is False:
+            raise DomainKitsError(
+                envelope.get("error") or "DomainKits API returned an error",
+                status,
+                _read_rate_limit(headers),
+            )
+        data = envelope.get("data") if isinstance(envelope, dict) else None
+        if not isinstance(data, list):
+            data = []
+        total = envelope.get("total")
+        registered = envelope.get("registered")
+        return {
+            "data": data,
+            "total": total if isinstance(total, int) else len(data),
+            "registered": registered if isinstance(registered, int) else 0,
+        }
