@@ -52,7 +52,6 @@ Lookups and reports:
 | `dk.dns(domain)` | `/dns` |
 | `dk.bulk_dns(domains)` | `/bulk/dns` |
 | `dk.bulk_whois(domains)` | `/bulk/whois` |
-| `dk.safety(domain)` | `/safety` |
 | `dk.ip_lookup(query)` | `/ip-lookup` |
 | `dk.registrar(query)` | `/registrar` |
 | `dk.status_guide(query)` | `/status-guide` |

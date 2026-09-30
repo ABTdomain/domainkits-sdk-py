@@ -86,9 +86,6 @@ class DomainKits:
     def bulk_whois(self, domains: list[str]) -> dict[str, Any]:
         return self._client.request_bulk("/bulk/whois", {"domains": domains})
 
-    def safety(self, domain: str) -> dict[str, Any]:
-        return self._client.request("/safety", {"domain": domain})
-
     def ip_lookup(self, query: str) -> dict[str, Any] | None:
         result = self._client.request_list("/ip-lookup", {"query": query})
         data = result["data"]
