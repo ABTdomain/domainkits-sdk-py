@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "domainkits"
-version = "0.3.8"
+version = "0.3.9"
 description = "Python client for the DomainKits REST API. Search expiring, newly registered, aged, active, deleted and marketplace domains, plus WHOIS, DNS, Certificate Transparency and trends."
 readme = "README.md"
 license = "MIT"
