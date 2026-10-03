@@ -109,14 +109,14 @@ class DomainKits:
     def monitor_changes(self, **params: Any) -> dict[str, Any]:
         return self._client.request_list("/monitor/changes", params)
 
+    def hostname_search(self, q: str, **params: Any) -> dict[str, Any]:
+        return self._client.request_envelope("/search/hostname", {"q": q, **params})
+
     def ct_subdomains(self, domain: str, **params: Any) -> dict[str, Any]:
         return self._client.request_list("/ct/subdomains", {"domain": domain, **params})
 
     def ct_certs(self, **params: Any) -> dict[str, Any]:
         return self._client.request_list("/ct/certs", params)
-
-    def ct_search(self, keyword: str, **params: Any) -> dict[str, Any]:
-        return self._client.request_list("/ct/search", {"keyword": keyword, **params})
 
     def tld_trends(self, type: str, **params: Any) -> Any:
         return self._client.request(f"/trends/tlds/{type}", params)

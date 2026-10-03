@@ -59,9 +59,9 @@ Lookups and reports:
 | `dk.typosquat(domain)` | `/typosquat` |
 | `dk.ns_reverse(ns)` | `/ns-reverse` |
 | `dk.monitor_changes()` | `/monitor/changes` |
+| `dk.hostname_search(q)` | `/search/hostname` |
 | `dk.ct_subdomains(domain)` | `/ct/subdomains` |
 | `dk.ct_certs()` | `/ct/certs` |
-| `dk.ct_search(keyword)` | `/ct/search` |
 | `dk.tld_trends(type)` | `/trends/tlds/*` |
 | `dk.keyword_trends(type)` | `/trends/keywords/*` |
 | `dk.nrds_download()` | `/nrds/download` |
