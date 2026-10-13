@@ -38,7 +38,6 @@ Search resources, each with `list`, `paginate` and `export`:
 |---|---|
 | `dk.expired` | `/search/expired` |
 | `dk.nrds` | `/search/nrds` |
-| `dk.nrds_live` | `/search/nrds-live` |
 | `dk.aged` | `/search/aged` |
 | `dk.active` | `/search/active` |
 | `dk.deleted` | `/search/deleted` |

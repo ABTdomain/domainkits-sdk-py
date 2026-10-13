@@ -59,7 +59,6 @@ class DomainKits:
 
         self.expired = SearchResource(self._client, "/search/expired")
         self.nrds = SearchResource(self._client, "/search/nrds")
-        self.nrds_live = SearchResource(self._client, "/search/nrds-live")
         self.aged = SearchResource(self._client, "/search/aged")
         self.active = SearchResource(self._client, "/search/active")
         self.deleted = SearchResource(self._client, "/search/deleted")
