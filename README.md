@@ -1,39 +1,24 @@
+[![PyPI](https://img.shields.io/pypi/v/domainkits?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/domainkits/)
+[![Python](https://img.shields.io/pypi/pyversions/domainkits?style=flat-square&logo=python&logoColor=white)](https://pypi.org/project/domainkits/)
+[![License](https://img.shields.io/pypi/l/domainkits?style=flat-square)](LICENSE)
+
 # domainkits
 
-Python client for the [DomainKits](https://domainkits.com) REST API.
+Python client for the [DomainKits](https://domainkits.com) domain data API. It runs on the standard library, with no other dependencies.
 
-This is the official Python SDK for the DomainKits API, published and maintained by the DomainKits team. DomainKits is built and operated by Lyalpha GmbH, with domain data and infrastructure provided by [ABTdomain](https://abtdomain.com), our domain intelligence and data aggregation platform. This repository is hosted under the ABTdomain GitHub organisation. Learn more about the relationship at [domainkits.com/about](https://domainkits.com/about).
+## What it does
 
-Every parameter, response field and current limit is documented in the [API reference](https://domainkits.com/dev/api-docs) and the [OpenAPI spec](https://domainkits.com/dev/openapi.yaml). This README only lists what the SDK covers. No dependencies outside the standard library.
+It brings domain data into your Python code, so your services, scheduled jobs and pipelines can search it, look it up and download it as part of their own logic:
 
-<p align="center">
-<a href="https://www.youtube.com/watch?v=8bXfKV5-eGw"><img src="https://img.youtube.com/vi/8bXfKV5-eGw/maxresdefault.jpg" alt="Video: How to get a newly registered domains feed with the DomainKits API" width="640"></a><br>
-<a href="https://www.youtube.com/watch?v=8bXfKV5-eGw">▶ Watch on YouTube: How to Get a Newly Registered Domains Feed with an API</a>
-</p>
+- **Lifecycle**: [newly registered domains](https://github.com/ABTdomain/newly-registered-domains) as a search or as the daily list, [expired domains](https://github.com/ABTdomain/expired-domains) as a search or as an exported file, and deleted, aged, active and for-sale domains
+- **Registration**: WHOIS data, the registrar, and what each EPP status code means
+- **DNS and hosting**: DNS records, the network behind an IP, and other domains on the same nameserver
+- **Certificates**: subdomains, certificates and newly seen hostnames from CT logs
+- **Footprint**: the same name across TLDs, and typosquat variants around a brand
+- **Trends**: keyword and TLD registration trends
+- **Changes**: transfers, drops, renewals and nameserver updates on high-value domains
 
-## Requirements
-
-The REST API is for Premium and Platinum accounts; unauthenticated requests are rejected with 401. Keys start with `dk_` and come from [domainkits.com](https://domainkits.com/pricing).
-
-## Install
-
-```bash
-pip install domainkits
-```
-
-## Usage
-
-```python
-import os
-from domainkits import DomainKits
-
-dk = DomainKits(os.environ["DOMAINKITS_API_KEY"])
-
-result = dk.nrds.list(query="shop", tld="com")
-print(result["total"], "matches")
-```
-
-Parameters are passed as keyword arguments using the REST parameter names, verbatim.
+▶ [See how it is used](#use-it-for)
 
 ## Endpoints
 
@@ -73,9 +58,33 @@ Lookups and reports:
 | `dk.search_status()` | `/search/status` |
 | `dk.health()` | `/health` |
 
-The [API reference](https://domainkits.com/dev/api-docs) is the authority on every filter, field and limit.
+Filters, fields and limits for each endpoint are in the [API reference](https://domainkits.com/dev/api-docs).
 
 **No PII.** Responses contain no registrant personal data.
+
+## Install
+
+```bash
+pip install domainkits
+```
+
+Set your key and make a call:
+
+```python
+import os
+from domainkits import DomainKits
+
+dk = DomainKits(os.environ["DOMAINKITS_API_KEY"])
+
+result = dk.nrds.list(query="shop", tld="com")
+print(result["total"], "matches")
+```
+
+Parameters are passed as keyword arguments using the REST parameter names, verbatim.
+
+The same key works for the REST API, the SDKs, the MCP server and the CLI.
+
+Sign up at [domainkits.com](https://domainkits.com/register) and create a key on your [dashboard](https://domainkits.com/dashboard). `dk.nrds_download()` works on a free account; the other calls need a plan that includes the API, see the [API reference](https://domainkits.com/dev/api-docs).
 
 ## Errors
 
@@ -104,6 +113,34 @@ dk = DomainKits(
     max_retries=2,
 )
 ```
+
+## Use it for
+
+### [Newly registered domains](https://github.com/ABTdomain/newly-registered-domains)
+
+```python
+dk.nrds.list(query="ai", tld="com")                  # search by keyword
+dk.nrds_download(tld="com", type="domains_only")     # pull the daily list
+```
+
+<p align="center">
+<a href="https://www.youtube.com/watch?v=8bXfKV5-eGw"><img src="https://img.youtube.com/vi/8bXfKV5-eGw/maxresdefault.jpg" alt="Video: How to get a newly registered domains feed with the DomainKits API" width="640"></a><br>
+<a href="https://www.youtube.com/watch?v=8bXfKV5-eGw">▶ Watch on YouTube: How to Get a Newly Registered Domains Feed with an API</a>
+</p>
+
+### [Expired domains](https://github.com/ABTdomain/expired-domains)
+
+```python
+dk.expired.list(query="shop", status="pending_delete", age_min=10)   # pending delete names with a long history
+dk.expired.export(tld="app", status="redemption")                    # one TLD's redemption stage as CSV
+```
+
+## Related
+
+- [ABTdomain/domainkits-sdk-go](https://github.com/ABTdomain/domainkits-sdk-go): Go client for the DomainKits domain data API
+- [ABTdomain/domainkits-sdk-js](https://github.com/ABTdomain/domainkits-sdk-js): TypeScript client for the DomainKits domain data API
+- [ABTdomain/domainkits-cli](https://github.com/ABTdomain/domainkits-cli): command-line client for the DomainKits domain data API
+- [ABTdomain/domainkits-mcp](https://github.com/ABTdomain/domainkits-mcp): hosted MCP server for domain data
 
 ## Resources
 
