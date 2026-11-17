@@ -120,7 +120,7 @@ class DomainKitsClient:
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "Accept": "application/json",
-                "User-Agent": "domainkits-python/0.4.2",
+                "User-Agent": "domainkits-python/0.4.4",
             }
             if payload is not None:
                 headers["Content-Type"] = "application/json"
